@@ -9,7 +9,7 @@ set(THIRD_PARTY_DIR "${CMAKE_SOURCE_DIR}/thirdParty")
 
 # Configure assets header file
 configure_file(${INCLUDE_DIR}/helpers/RootDir.h.in
-        ${INCLUDE_DIR}/helpers/RootDir.h)
+        ${CMAKE_BINARY_DIR}/RootDir.h)
 
 # quikGrid
 set(QUIKGRID_DIR "${THIRD_PARTY_DIR}/quikgrid")
@@ -21,13 +21,19 @@ target_include_directories(quikgrid
     PRIVATE
         "${QUIKGRID_DIR}/src"
 )
-List(APPEND LIBS quikgrid)
+list(APPEND LIBS quikgrid)
 
 # Executable
 file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
-add_executable(${PROJECT_NAME}
-        ${INCLUDE_DIR}
-        ${SRC_FILES}
-)
 
-message("!!!! ${PROJECT_NAME}")
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+target_include_directories(${PROJECT_NAME}
+        PUBLIC
+        "${CMAKE_SOURCE_DIR}/include"
+        ${CMAKE_BINARY_DIR}
+)
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+        ${LIBS}
+)
