@@ -1,3 +1,9 @@
 [submodule "third_party/external_lib/json"]
 	path = third_party/external_lib/json
 	url = https://github.com/nlohmann/json.git
+[submodule "third_party/external_lib/nanoflann"]
+	path = third_party/external_lib/nanoflann
+	url = https://github.com/jlblancoc/nanoflann.git
+[submodule "third_party/external_lib/stb"]
+	path = third_party/external_lib/stb
+	url = https://github.com/nothings/stb.git

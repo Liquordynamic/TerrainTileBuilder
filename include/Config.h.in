@@ -1,0 +1,25 @@
+#pragma once
+
+#cmakedefine CPU_PARALLEL_COMPUTATION
+#ifdef CPU_PARALLEL_COMPUTATION
+    #include <omp.h>
+#endif
+
+namespace TTB {
+
+    #define ROOT_DIR "@CMAKE_SOURCE_DIR@"
+    #define W_ROOT_DIR L"@CMAKE_SOURCE_DIR@"
+    #define OUTPUT_DIR "@CMAKE_SOURCE_DIR@/output"
+    #define RESOURCE_DIR "@CMAKE_SOURCE_DIR@/resource/"
+    #define PYTHON_SCRIPT_DIR "@CMAKE_SOURCE_DIR@/pyUtils/"
+
+    #define CONDA_ENVIRONMENT "BMS"
+    #define PYTHON_COORDINATE_CONVERTION "convert_coordinates.py"
+
+    constexpr const double PI = 3.141592653589793;
+    constexpr const double DEG_TO_RAD = PI / 180.0;
+    constexpr const double RAD_TO_DEG = 180.0 / PI;
+
+    constexpr const char* CPU_IDW_CORE = "CIDW";
+    constexpr const char* VULKAN_IDW_CORE = "VIDW";
+}
