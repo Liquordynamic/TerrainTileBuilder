@@ -23,11 +23,14 @@ namespace TTB {
         int                         m_height;
         int                         m_width;
         std::vector<T>              m_data;
+        std::vector<double>        m_uvs;
 
     public:
         TextureEncoder(int width, int height);
 
         std::vector<T>& getData();
+
+        const std::vector<double>& getUVs();
 
         [[nodiscard]] int getWidth() const;
 

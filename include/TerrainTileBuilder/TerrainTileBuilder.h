@@ -21,21 +21,23 @@ namespace TTB {
         void m_createResourceDirectory() const;
 
     public:
-        int toZoom;
-        int fromZoom;
-        int tileSize;
-        fs::path outputPath;
-        const char* coreName;
+        int                                 toZoom;
+        int                                 fromZoom;
+        int                                 tileSize;
+        fs::path                            outputPath;
 
         TerrainTileBuilder(
-                const char* coreName,
-                int _tileSize,
-                int _fromZoom,
-                int _toZoom,
-                const char* _outputPath
+                int                         _tileSize,
+                int                         _fromZoom,
+                int                         _toZoom,
+                const char*                 _outputPath
             );
 
-        void build(std::vector<Point>& samplePoints, std::array<double, 4>& extent) const;
+        void build(
+                const char*                 coreName,
+                std::vector<Point>&         samplePoints,
+                std::array<double, 4>&      extent
+            ) const;
     };
 
 }

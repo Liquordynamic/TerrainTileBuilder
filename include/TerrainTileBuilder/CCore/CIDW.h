@@ -15,9 +15,12 @@ namespace TTB {
 
     class CIDW : public ICore {
 
+    private:
+        void m_initResourceDirectoryStructure() override;
+
     public:
 
-        const char* className() override { return "CPU IDW COMPUTATION CORE"; }
+        const char* getDisplayName() override { return "CPU IDW COMPUTATION CORE"; }
 
         void execute(
                 std::vector<Point>&     samplePoints,

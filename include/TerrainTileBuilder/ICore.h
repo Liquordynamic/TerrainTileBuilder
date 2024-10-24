@@ -14,6 +14,9 @@ namespace TTB {
 
     class ICore : public IObject {
 
+    private:
+        virtual void m_initResourceDirectoryStructure() = 0;
+
     public:
         fs::path outputPath;
         int tileSize;
@@ -21,13 +24,13 @@ namespace TTB {
         int toZoom;
 
         ICore() {
-            outputPath = "";
-            tileSize = 0;
-            fromZoom = 0;
-            toZoom = 0;
+            outputPath      =           "";
+            tileSize        =           0;
+            fromZoom        =           0;
+            toZoom          =           0;
         }
 
-        virtual const char* className() { return "ICore"; }
+        const char* getDisplayName() override { return "Interface Core"; }
 
         virtual void initialize(
                 const char*             _outputPath,
@@ -35,10 +38,11 @@ namespace TTB {
                 int                     _fromZoom,
                 int                     _toZoom
         ) {
-            outputPath = _outputPath;
-            tileSize = _tileSize;
-            fromZoom = _fromZoom;
-            toZoom = _toZoom;
+            outputPath      =           _outputPath;
+            tileSize        =           _tileSize;
+            fromZoom        =           _fromZoom;
+            toZoom          =           _toZoom;
+            m_initResourceDirectoryStructure();
         };
 
         virtual void execute(

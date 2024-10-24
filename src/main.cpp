@@ -76,11 +76,11 @@ int main() {
     auto samplePoints = readFile(inputFile.c_str(), extent);
 
     // Interpolation
-    auto builder = new TTB::TerrainTileBuilder(TTB::CPU_IDW_CORE, tileSize, fromZoom, toZoom, outputPath.c_str());
+    auto builder = new TTB::TerrainTileBuilder(tileSize, fromZoom, toZoom, outputPath.c_str());
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    builder->build(samplePoints, extent);
+    builder->build(TTB::CPU_IDW_CORE, samplePoints, extent);
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration = end - start;

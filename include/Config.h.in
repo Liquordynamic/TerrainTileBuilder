@@ -3,6 +3,7 @@
 #cmakedefine CPU_PARALLEL_COMPUTATION
 #ifdef CPU_PARALLEL_COMPUTATION
     #include <omp.h>
+    const int MAX_NUM_THREADS = omp_get_max_threads();
 #endif
 
 namespace TTB {
@@ -16,9 +17,9 @@ namespace TTB {
     #define CONDA_ENVIRONMENT "BMS"
     #define PYTHON_COORDINATE_CONVERTION "convert_coordinates.py"
 
-    constexpr const double PI = 3.141592653589793;
-    constexpr const double DEG_TO_RAD = PI / 180.0;
-    constexpr const double RAD_TO_DEG = 180.0 / PI;
+    constexpr double PI = 3.141592653589793;
+    constexpr double DEG_TO_RAD = PI / 180.0;
+    constexpr double RAD_TO_DEG = 180.0 / PI;
 
     constexpr const char* CPU_IDW_CORE = "CIDW";
     constexpr const char* VULKAN_IDW_CORE = "VIDW";

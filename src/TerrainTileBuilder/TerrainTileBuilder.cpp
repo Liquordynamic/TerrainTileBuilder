@@ -10,7 +10,6 @@
 #include "Utils/Point.h"
 #include "Config.h"
 #include "Reflection/Reflector.h"
-#include "Utils/TextureEncoder.h"
 #include "TerrainTileBuilder/ICore.h"
 #include "TerrainTileBuilder/TerrainTileBuilder.h"
 
@@ -19,7 +18,6 @@ namespace fs = std::filesystem;
 namespace TTB {
 
     TerrainTileBuilder::TerrainTileBuilder(
-            const char*             _coreName,
             int                     _tileSize,
             int                     _fromZoom,
             int                     _toZoom,
@@ -27,11 +25,10 @@ namespace TTB {
     ):
             toZoom                  {_toZoom},
             fromZoom                {_fromZoom},
-            coreName                {_coreName},
             tileSize                {_tileSize}
     {
         outputPath = RESOURCE_DIR / fs::path(_outputPath);
-        m_createResourceDirectory();
+//        m_createResourceDirectory();
     }
 
     void TerrainTileBuilder::m_createResourceDirectory() const {
@@ -48,13 +45,13 @@ namespace TTB {
         }
     }
 
-    void TerrainTileBuilder::build(std::vector<Point>& samplePoints, std::array<double, 4>& extent) const {
+    void TerrainTileBuilder::build(const char* coreName, std::vector<Point>& samplePoints, std::array<double, 4>& extent) const {
 
         auto coreObject = Reflector::instance().create(coreName);
         auto core = dynamic_cast<ICore*>(coreObject.get());
 
         if (core) {
-            std::cout << "========= Using Generation Core < " << core->className() << " > =========" << std::endl;
+            std::cout << "\n>>> Using Generation Core < " << core->getDisplayName() << " >\n" << std::endl;
         } else {
             std::cout << "Unknown object type: " << coreName << std::endl;
             return;

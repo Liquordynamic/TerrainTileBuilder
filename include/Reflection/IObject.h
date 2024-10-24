@@ -8,7 +8,10 @@
 class IObject {
 
 public:
+    virtual const char* getDisplayName() { return "Interface Object"; }
+
     IObject() = default;
+
     virtual ~IObject() = default;
 };
 

@@ -4,7 +4,6 @@
 
 #include <string>
 #include <iostream>
-
 #include "Config.h"
 #include "Utils/PyTrigger.h"
 
@@ -16,9 +15,9 @@ bool pyTrigger(const char* scriptPath, const char* envName) {
     int result = std::system(command.c_str());
 
     if (result == 0) {
-        std::cout << "Python script < " << scriptPath << " > executed successfully!" << std::endl;
+        std::cout << "\n>>> Executing Python Script < " << scriptPath << " >  Successfully\n" << std::endl;
     } else {
-        std::cerr << "Failed to execute Python script." << std::endl;
+        std::cerr << "\n>>> Failing to Execute Python Script\n" << std::endl;
     }
 
     return result != 0;

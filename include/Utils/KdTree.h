@@ -6,9 +6,9 @@
 #define TERRAINTILEBUILDER_KDTREE_H
 
 #include <vector>
+#include "nanoflann.hpp"
 #include "Utils/Point.h"
 #include "Utils/Geo/GeoUtils.h"
-#include "nanoflann.hpp"
 
 namespace TTB {
 
