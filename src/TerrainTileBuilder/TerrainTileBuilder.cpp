@@ -47,8 +47,7 @@ namespace TTB {
 
     void TerrainTileBuilder::build(const char* coreName, std::vector<Point>& samplePoints, std::array<double, 4>& extent) const {
 
-        auto coreObject = Reflector::instance().create(coreName);
-        auto core = dynamic_cast<ICore*>(coreObject.get());
+        auto core = dynamic_cast<ICore*>(Reflector::instance().create(coreName));
 
         if (core) {
             std::cout << "\n>>> Using Generation Core < " << core->getDisplayName() << " >\n" << std::endl;
@@ -59,6 +58,9 @@ namespace TTB {
 
         core->initialize(outputPath.c_str(), tileSize, fromZoom, toZoom);
         core->execute(samplePoints, extent);
+
+        delete core;
+        core = nullptr;
     }
 
 }

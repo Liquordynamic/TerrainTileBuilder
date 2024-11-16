@@ -1,4 +1,7 @@
 cmake-build-debug
+cmake-build-release
 build
-resource/
+pyUtils
+resource
 .idea
+.vscode

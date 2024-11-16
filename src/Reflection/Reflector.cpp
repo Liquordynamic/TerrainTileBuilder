@@ -1,4 +1,5 @@
 #include "Reflection/Reflector.h"
+#include <iostream>
 
 namespace TTB {
 
@@ -8,16 +9,16 @@ namespace TTB {
         return instance;
     }
 
-    std::unique_ptr<IObject> Reflector::create(const char *className) {
+    IObject* Reflector::create(const std::string& className) {
 
-        auto it = m_classRegistry.find(className);
-        if (it != m_classRegistry.end()) {
-            return it->second();
+        for (const auto& it : m_classRegistry) {
+            if (it.first == className)
+                return it.second();
         }
         return nullptr;
     }
 
-    bool Reflector::registerClass(const char* className, std::function<std::unique_ptr<IObject>()>&& creator) {
+    bool Reflector::registerClass(const char* className, std::function<IObject*()>&& creator) {
 
         m_classRegistry[className] = std::move(creator);
         return true;

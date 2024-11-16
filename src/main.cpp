@@ -20,33 +20,34 @@ std::vector<Point> readFile(const char* filePath, std::array<double, 4>& extent)
 
     std::vector<Point> samplePoints;
 
+    double minElevation = 999999.0;
+    double maxElevation = -999999.0;
     auto readFile =  RESOURCE_DIR + string(filePath);
     ifstream fs(readFile);
 
     int num;
     fs >> num;
-    double x, y, p, h, u, v;
+    double x, y, z;
 
     string nn;
-    for (size_t i = 0; i < 6; ++i)
+    for (size_t i = 0; i < 3; ++i)
         fs >> nn;
 
     for (size_t i = 0; i < num; ++i) {
 
-        // Read x, y, p, h attributes
-        for (size_t j = 0; j < 6; ++j) {
+        // Read x, y, z attributes
+        for (size_t j = 0; j < 3; ++j) {
 
             if (j == 0) fs >> x;
             else if (j == 1) fs >> y;
-            else if (j == 2) fs >> p;
-            else if (j == 3) fs >> h;
-            else if (j == 4) fs >> u;
-            else fs >> v;
+            else fs >> z;
         }
 
         // Remove sampling points out of the extent
         if (x < extent[0] || x > extent[2] || y < extent[1] || y > extent[3]) continue;
-        samplePoints.emplace_back(Point{x, y, p - h});
+        samplePoints.emplace_back(Point{x, y, z});
+        // minElevation = z < minElevation ? z : minElevation;
+        // maxElevation = z > maxElevation ? z : maxElevation;
     }
 
     return samplePoints;
@@ -64,13 +65,12 @@ int main() {
     int toZoom = descriptiveJSON["to_level"];
     int tileSize = descriptiveJSON["tile_size"];
     int fromZoom = descriptiveJSON["from_level"];
-    std::string rawFile = descriptiveJSON["raw_file"];
     std::string inputFile = descriptiveJSON["input_file"];
     std::string outputPath = descriptiveJSON["output_path"];
     std::array<double, 4> extent = descriptiveJSON["extent"];
 
     // Preprocess data by python
-    pyTrigger(PYTHON_COORDINATE_CONVERTION, CONDA_ENVIRONMENT);
+    // pyTrigger(PYTHON_COORDINATE_CONVERTION, CONDA_ENVIRONMENT);
 
     // Read data
     auto samplePoints = readFile(inputFile.c_str(), extent);

@@ -6,6 +6,7 @@
 #define TERRAINTILEBUILDER_REFLECTOR_H
 
 #include <memory>
+#include <string>
 #include <functional>
 #include <unordered_map>
 
@@ -16,7 +17,7 @@ namespace TTB {
     class Reflector {
 
     private:
-        std::unordered_map<const char*, std::function<std::unique_ptr<IObject>()>> m_classRegistry;
+        std::unordered_map<const char*, std::function<IObject*()>> m_classRegistry;
 
     public:
 
@@ -24,8 +25,8 @@ namespace TTB {
         Reflector(const Reflector&) = delete;
         Reflector& operator= (const Reflector&) = delete;
 
-        std::unique_ptr<IObject> create(const char* className);
-        bool registerClass(const char* className, std::function<std::unique_ptr<IObject>()>&& creator);
+        IObject* create(const std::string& className);
+        bool registerClass(const char* className, std::function<IObject*()>&& creator);
 
     private:
 
@@ -37,6 +38,6 @@ namespace TTB {
 
 #define REGISTER_CLASS(ClassName) \
         static bool _##ClassName##_registered = \
-            TTB::Reflector::instance().registerClass(#ClassName, []() { return std::make_unique<ClassName>(); });
+            TTB::Reflector::instance().registerClass(#ClassName, []() { return new ClassName(); });
 
 #endif //TERRAINTILEBUILDER_REFLECTOR_H
