@@ -7,18 +7,14 @@
 
 #include <array>
 #include <vector>
-#include <string>
 #include <filesystem>
-#include "TerrainTileBuilder/ICore.h"
 
 namespace fs = std::filesystem;
-
 namespace TTB {
 
     class TerrainTileBuilder {
 
-    private:
-        void m_createResourceDirectory() const;
+    void m_createResourceDirectory() const;
 
     public:
         int                                 toZoom;

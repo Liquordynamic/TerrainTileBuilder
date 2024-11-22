@@ -9,11 +9,11 @@ namespace TTB {
         return instance;
     }
 
-    IObject* Reflector::create(const std::string& className) {
+    IObject* Reflector::create(const std::string& className) const {
 
-        for (const auto& it : m_classRegistry) {
-            if (it.first == className)
-                return it.second();
+        for (const auto&[fst, snd] : m_classRegistry) {
+            if (fst == className)
+                return snd();
         }
         return nullptr;
     }

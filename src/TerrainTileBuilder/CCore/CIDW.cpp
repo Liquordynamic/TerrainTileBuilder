@@ -43,11 +43,11 @@ namespace TTB {
         for (size_t i = 0; i < k; ++i) {
 
             const auto& point = points[ret_index[i]];
-            double dist = out_dist[i];
+            const double dist = out_dist[i];
             if (dist == 0.0) {
                 return point.z;
             }
-            double weight = 1.0 / std::pow(dist, power);
+            const double weight = 1.0 / std::pow(dist, power);
             numerator += weight * point.z;
             denominator += weight;
         }
@@ -73,15 +73,14 @@ namespace TTB {
 
     void initializeGrid(std::vector<Point>& grid, std::array<double, 4>& extent, int tileSize) {
 
-        auto dTileSize = double(tileSize);
-        auto invTileSize = 1.0 / dTileSize;
+        const auto dTileSize = static_cast<double>(tileSize);
+        const auto invTileSize = 1.0 / dTileSize;
 
-        double u, v;
         size_t index = 0;
         for (int row = 0; row < tileSize; ++row) {
-            v = (double(row) + 0.5) * invTileSize;
+            const double v = (static_cast<double>(row) + 0.5) * invTileSize;
             for (int col = 0; col < tileSize; ++col) {
-                u = (double(col) + 0.5) * invTileSize;
+                const double u = (static_cast<double>(col) + 0.5) * invTileSize;
                 grid[index].x = interpolate<double>(extent[0], extent[2], u);
                 grid[index].y = interpolate<double>(extent[1], extent[3], v);
                 grid[index].z = 0.0;
@@ -97,9 +96,7 @@ namespace TTB {
             fs::create_directory(outputPath);
         }
         for (int level = fromZoom; level <= toZoom; ++level) {
-
-            auto levelPath = fs::path(outputPath) / std::to_string(level);
-            if (!fs::exists(levelPath)) {
+            if (auto levelPath = fs::path(outputPath) / std::to_string(level); !fs::exists(levelPath)) {
                 fs::create_directory(levelPath);
             }
         }
@@ -144,14 +141,14 @@ namespace TTB {
 
                 for (int i = 0; i < pixelCount; ++i) {
 
-                    auto lon = interpolate<double>(bbox[0], bbox[2], uvs[i * 2 + 0]);
-                    auto lat = interpolate<double>(bbox[1], bbox[3], uvs[i * 2 + 1]);
+                    const auto lon = interpolate<double>(bbox[0], bbox[2], uvs[i * 2 + 0]);
+                    const auto lat = interpolate<double>(bbox[1], bbox[3], uvs[i * 2 + 1]);
 
                     std::array<double, 2> point = { lon, lat };
 
                     // Terrain-RGB encoding rule: height = -10000 + ((R * 256 * 256 + G * 256 + B) * 0.1)
-                    auto height = inverseDistanceWeighting(samplePoints, point.data(), tree);
-                    auto RGB = static_cast<uint32_t>((height + 10000.0) * 10);
+                    const auto height = inverseDistanceWeighting(samplePoints, point.data(), tree);
+                    const auto RGB = static_cast<uint32_t>((height + 10000.0) * 10);
                     texture[i * 3 + 0] = (RGB >> 16) & 0xFF;
                     texture[i * 3 + 1] = (RGB >> 8) & 0xFF;
                     texture[i * 3 + 2] = RGB & 0xFF;

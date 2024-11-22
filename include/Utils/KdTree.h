@@ -40,7 +40,7 @@ namespace TTB {
             2
     > KdTreePrototype;
 
-    KdTreePrototype buildKdTree(PointCloud& cloud, int dim, int maxLeaf = 10);
+    KdTreePrototype buildKdTree(const PointCloud& cloud, int dim, int maxLeaf = 10);
 }
 
 #endif //TERRAINTILEBUILDER_KDTREE_H

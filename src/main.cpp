@@ -16,6 +16,46 @@ using std::ifstream;
 using Json = nlohmann::json;
 namespace fs = std::filesystem;
 
+std::vector<Point> readBinFile(const char* filePath, const std::array<double, 4>& extent) {
+
+    const auto readFile =  RESOURCE_DIR + string(filePath);
+    std::ifstream file(readFile, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("Could not open file " + std::string(filePath));
+    }
+
+    file.seekg(0, std::ios::end);
+    const std::streamsize fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    if (fileSize % (3 * sizeof(float)) != 0) {
+        throw std::runtime_error("File does not contain a multiple of 3 floats, cannot form valid Points.");
+    }
+
+    const size_t numPoints = fileSize / (3 * sizeof(float));
+    constexpr size_t CHUNK_SIZE = 1024;
+    constexpr size_t BUFFER_SIZE = CHUNK_SIZE * 3;
+    std::vector<float> buffer(BUFFER_SIZE);
+
+    std::vector<Point> points;
+    points.reserve(numPoints);
+    while (file) {
+        file.read(reinterpret_cast<char*>(buffer.data()), BUFFER_SIZE * sizeof(float));
+        const size_t numFloatsRead = file.gcount() / sizeof(float);
+
+        for (size_t i = 0; i < numFloatsRead; i += 3) {
+            const auto x = buffer[i + 0];
+            const auto y = buffer[i + 1];
+            const auto z = buffer[i + 2];
+
+            if (x < extent[0] || x > extent[2] || y < extent[1] || y > extent[3]) continue;
+            points.emplace_back(Point{x, y, z});
+        }
+    }
+
+    return points;
+}
+
 std::vector<Point> readFile(const char* filePath, std::array<double, 4>& extent) {
 
     std::vector<Point> samplePoints;
@@ -73,7 +113,7 @@ int main() {
     // pyTrigger(PYTHON_COORDINATE_CONVERTION, CONDA_ENVIRONMENT);
 
     // Read data
-    auto samplePoints = readFile(inputFile.c_str(), extent);
+    auto samplePoints = readBinFile(inputFile.c_str(), extent);
 
     // Interpolation
     auto builder = new TTB::TerrainTileBuilder(tileSize, fromZoom, toZoom, outputPath.c_str());

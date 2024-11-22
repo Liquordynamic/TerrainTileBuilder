@@ -25,7 +25,7 @@ namespace TTB {
         Reflector(const Reflector&) = delete;
         Reflector& operator= (const Reflector&) = delete;
 
-        IObject* create(const std::string& className);
+        IObject* create(const std::string& className) const;
         bool registerClass(const char* className, std::function<IObject*()>&& creator);
 
     private:

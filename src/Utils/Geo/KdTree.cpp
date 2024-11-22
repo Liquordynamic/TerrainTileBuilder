@@ -6,7 +6,7 @@
 
 namespace TTB {
 
-    KdTreePrototype buildKdTree(PointCloud& cloud, int dim, int maxLeaf) {
+    KdTreePrototype buildKdTree(const PointCloud& cloud, const int dim, const int maxLeaf) {
         return KdTreePrototype(dim, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(maxLeaf));
     }
 }
