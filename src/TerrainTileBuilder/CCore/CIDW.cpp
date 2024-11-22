@@ -54,14 +54,14 @@ namespace TTB {
         return numerator / denominator;
     }
 
-    void getTilesInExtent(std::vector<Tile<int>>& tiles, const std::array<double, 4>& extent, int zoomLevel) {
+    void getTilesInExtent(std::vector<Tile<int>>& tiles, const std::array<double, 4>& extent, const int zoomLevel) {
 
-        auto tileBL = pointToTile(extent[0], extent[1], zoomLevel);
-        auto tileTR = pointToTile(extent[2], extent[3], zoomLevel);
-        auto minX = std::max(tileBL.x, 0);
-        auto minY = std::max(tileTR.y, 0);
-        auto maxX = tileTR.x;
-        auto maxY = tileBL.y;
+        const auto tileBL = pointToTile(extent[0], extent[1], zoomLevel);
+        const auto tileTR = pointToTile(extent[2], extent[3], zoomLevel);
+        const auto minX = std::max(tileBL.x, 0);
+        const auto minY = std::max(tileTR.y, 0);
+        const auto maxX = tileTR.x;
+        const auto maxY = tileBL.y;
 
         tiles.clear();
         tiles.reserve((maxX - minX + 1) * (maxY - minY + 1));
@@ -108,7 +108,7 @@ namespace TTB {
     )
     {
         // Build KD-tree
-        auto cloud = PointCloud{ .points = samplePoints };
+        const auto cloud = PointCloud{ .points = samplePoints };
         auto tree = buildKdTree(cloud, 2);
         tree.buildIndex();
 
@@ -117,8 +117,8 @@ namespace TTB {
         auto bbox = std::array<double, 4>{ 0.0, 0.0, 0.0, 0.0};
 
         // Initialize texture encoder
-        auto encoder = std::make_unique<TextureEncoder<uint8_t, 3>>(tileSize, tileSize);
-        auto pixelCount = encoder->getWidth() * encoder->getHeight();
+        const auto encoder = std::make_unique<TextureEncoder<uint8_t, 3>>(tileSize, tileSize);
+        const auto pixelCount = encoder->getWidth() * encoder->getHeight();
         auto& texture = encoder->getData();
         auto& uvs = encoder->getUVs();
 
@@ -136,7 +136,7 @@ namespace TTB {
                 tileToBBox(tile, bbox);
 
                 #ifdef CPU_PARALLEL_COMPUTATION
-                #pragma omp parallel for default(none) shared(pixelCount, uvs, bbox, samplePoints, tree, texture)
+                #pragma omp parallel for default(none) shared(pixelCount, uvs, bbox, samplePoints, tree, texture, extent)
                 #endif // CPU_PARALLEL_COMPUTATION
 
                 for (int i = 0; i < pixelCount; ++i) {
@@ -146,8 +146,12 @@ namespace TTB {
 
                     std::array<double, 2> point = { lon, lat };
 
+                    double height = 0.0;
+                    if (lon >= extent[0] && lon <= extent[2] && lat >= extent[1] && lat <= extent[3]) {
+                        height = inverseDistanceWeighting(samplePoints, point.data(), tree);
+                    }
+
                     // Terrain-RGB encoding rule: height = -10000 + ((R * 256 * 256 + G * 256 + B) * 0.1)
-                    const auto height = inverseDistanceWeighting(samplePoints, point.data(), tree);
                     const auto RGB = static_cast<uint32_t>((height + 10000.0) * 10);
                     texture[i * 3 + 0] = (RGB >> 16) & 0xFF;
                     texture[i * 3 + 1] = (RGB >> 8) & 0xFF;
